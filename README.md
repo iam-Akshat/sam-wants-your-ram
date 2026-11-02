@@ -134,7 +134,7 @@ Vite + strict TypeScript, three.js 0.170 (ACES filmic tone mapping, PMREM enviro
 
 ## Hosting on Cloudflare
 
-Live at **https://ram.akshatsethi.com**, served by a Cloudflare Worker (`worker/index.ts`, config in `wrangler.jsonc`):
+Live at **https://sameatsram.akshatsethi.com**, served by a Cloudflare Worker (`worker/index.ts`, config in `wrangler.jsonc`):
 
 * **Static assets:** `dist/` (the single-file game plus `og.png`). The Worker serves `/` itself so it can fill in `%ORIGIN%` in the share-card meta tags.
 * **Score API:** `/api/stats`, `/api/leaderboard` and `/api/score` reuse `server/core.ts` on **D1** (`migrations/`).

@@ -17,7 +17,7 @@
     { "name": "SCORE_LIMITER", "namespace_id": "4401", "simple": { "limit": 1, "period": 10 } }
   ],
   "routes": [
-    { "pattern": "ram.akshatsethi.com", "custom_domain": true }
+    { "pattern": "sameatsram.akshatsethi.com", "custom_domain": true }
   ],
   "observability": { "enabled": true }
 }
