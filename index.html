@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0b1230" />
+<title>Sam Wants Your RAM</title>
+<meta name="description" content="Sam Altman says it's &quot;quite terrible&quot; that your RAM is only used 5% of the time. How much can you save from him? A parody endless runner." />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="SAM WANTS YOUR RAM" />
+<meta property="og:title" content="Sam Wants Your RAM" />
+<meta property="og:description" content="Sam Altman says it's &quot;quite terrible&quot; that your RAM is only used 5% of the time. How much can you save from him?" />
+<meta property="og:url" content="%ORIGIN%/" />
+<meta property="og:image" content="%ORIGIN%/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Sam Wants Your RAM" />
+<meta name="twitter:description" content="Sam Altman says it's &quot;quite terrible&quot; that your RAM is only used 5% of the time. How much can you save from him?" />
+<meta name="twitter:image" content="%ORIGIN%/og.png" />
+<style>html,body{margin:0;height:100%;background:#0b1230;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}#c{position:fixed;inset:0;width:100%;height:100%;display:block}#ui{position:fixed;inset:0}</style>
+<style>
+#boot{position:fixed;inset:0;z-index:100000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;box-sizing:border-box;text-align:center;color:#d8f3ff;font:700 15px/1.3 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(ellipse at 50% 30%,#14235c 0%,#0b1230 60%,#060a1f 100%);opacity:1;transition:opacity .3s ease}
+#boot.veil{background:rgba(6,10,31,.86)}
+#boot.out{opacity:0;pointer-events:none}
+#boot .b-logo{font:900 clamp(30px,8vw,64px)/.95 Impact,"Arial Black",system-ui,sans-serif;letter-spacing:.02em;color:#fff;text-shadow:0 0 18px #2cff9a,0 4px 0 #0b1230}
+#boot .b-logo span{color:#ffd23f;text-shadow:0 0 18px #ff3ea5,0 4px 0 #0b1230}
+#boot .b-spin{width:34px;height:34px;border-radius:50%;border:5px solid rgba(70,200,255,.25);border-top-color:#46c8ff;animation:b-rot .8s linear infinite;will-change:transform}
+#boot .b-bar{position:relative;width:min(80vw,420px);height:16px;border:3px solid #060a1f;border-radius:10px;background:#0b1230;box-shadow:0 0 0 2px rgba(70,200,255,.35);overflow:hidden}
+#boot .b-fill{position:absolute;inset:0;background:linear-gradient(90deg,#14a864,#2cff9a);transform-origin:left center;transform:scaleX(0);transition:transform .25s ease-out;will-change:transform}
+#boot .b-shim{position:absolute;top:0;bottom:0;left:0;width:30%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:b-shim 1.1s linear infinite;will-change:transform}
+#boot .b-step{min-height:1.3em;color:#9fe8ff}
+#boot .b-tip{max-width:min(86vw,460px);min-height:2.6em;color:#ffd23f;font-weight:600;font-size:13px;opacity:1;transition:opacity .3s}
+#boot .b-tip.f{opacity:0}
+#boot.err .b-spin,#boot.err .b-bar,#boot.err .b-tip,#boot.err .b-step{display:none}
+#boot .b-slow,#boot .b-err{display:flex;flex-direction:column;gap:8px;align-items:center;max-width:min(90vw,460px)}
+#boot [hidden]{display:none!important}
+#boot button{font:800 14px system-ui,sans-serif;padding:10px 16px;border-radius:12px;border:3px solid #060a1f;background:#46c8ff;color:#060a1f;cursor:pointer}
+#boot button.alt{background:#ffd23f}
+#boot pre{margin:0;max-height:90px;overflow:auto;text-align:left;font:11px/1.3 ui-monospace,monospace;background:#060a1f;color:#ff8fa0;padding:6px 8px;border-radius:8px;max-width:100%;white-space:pre-wrap}
+@keyframes b-rot{to{transform:rotate(360deg)}}
+@keyframes b-shim{from{transform:translateX(-120%)}to{transform:translateX(420%)}}
+</style>
+</head>
+<body>
+<div id="boot" role="status" aria-live="polite"><div class="b-logo">SAM WANTS<br><span>YOUR RAM</span></div><div class="b-spin"></div>
+<div class="b-bar"><i class="b-fill"></i><i class="b-shim"></i></div><div class="b-step">Starting up…</div><div class="b-tip"></div>
+<div class="b-slow" hidden><div>Still working… your GPU is compiling shaders.</div><div><button id="b-low" class="alt">Continue in Low quality</button> <button id="b-reload">Reload</button></div></div>
+<div class="b-err" hidden><div>Something went wrong while loading.</div><pre id="b-pre"></pre><div><button id="b-reload2">Reload</button> <button id="b-copy" class="alt">Copy error details</button></div></div></div>
+<script>
+(function(){
+var el=document.getElementById('boot'),fill=el.querySelector('.b-fill'),step=el.querySelector('.b-step'),tip=el.querySelector('.b-tip'),slow=el.querySelector('.b-slow'),err=el.querySelector('.b-err'),pre=document.getElementById('b-pre');
+var TIPS=['Allocating RAM… 5% utilized.','Asking Sam nicely for your memory back.','Defragmenting the cloud. It is mostly your RAM.','Maximum utilization: loading. Minimum utilization: you.','Reticulating DIMM slots…','Convincing the Utilizer to start its engine.','Your RAM sits idle 95% of the time. That is called resting.','Compiling shaders so nothing hitches mid-run.','Counting sticks. Sam counts them faster.','Tip: swipe, do not stare.'];
+var ti=Math.floor(Math.random()*TIPS.length),tipT=0,slowT=0,hideT=0,errText='';
+function showTip(){tip.classList.add('f');setTimeout(function(){ti=(ti+1)%TIPS.length;tip.textContent=TIPS[ti];tip.classList.remove('f');},300);}
+function armSlow(){clearTimeout(slowT);slowT=setTimeout(function(){if(B.visible&&err.hidden)slow.hidden=false;},15000);}
+var B=window.__boot={visible:true,pct:0,log:[0],onLow:null,
+show:function(label,veil){clearTimeout(hideT);el.classList.remove('err');B.visible=true;el.classList.toggle('veil',!!veil);el.classList.remove('out');el.style.display='flex';slow.hidden=true;err.hidden=true;B.pct=0;B.log=[0];fill.style.transition='none';fill.style.transform='scaleX(0)';void fill.offsetWidth;fill.style.transition='';step.textContent=label||'Loading…';tip.textContent=TIPS[ti];clearInterval(tipT);tipT=setInterval(showTip,2600);armSlow();},
+set:function(p,label){if(p<B.pct)p=B.pct;if(p>1)p=1;B.pct=p;B.log.push(p);fill.style.transform='scaleX('+p+')';if(label)step.textContent=label+(p>0&&p<1?'  '+Math.round(p*100)+'%':'');slow.hidden=true;armSlow();},
+hide:function(){B.set(1);B.visible=false;clearTimeout(slowT);clearInterval(tipT);el.classList.add('out');hideT=setTimeout(function(){if(!B.visible)el.style.display='none';},400);},
+fail:function(e){var m=(e&&e.stack)||(e&&e.message)||String(e);errText=m+'\n'+navigator.userAgent+'\n'+location.href;pre.textContent=m;B.visible=true;clearTimeout(hideT);clearTimeout(slowT);el.classList.remove('out','veil');el.classList.add('err');el.style.display='flex';slow.hidden=true;err.hidden=false;}};
+tip.textContent=TIPS[ti];tipT=setInterval(showTip,2600);armSlow();step.textContent='Starting up…';
+document.getElementById('b-reload').onclick=document.getElementById('b-reload2').onclick=function(){location.reload();};
+document.getElementById('b-low').onclick=function(){slow.hidden=true;if(B.onLow)B.onLow();else{location.search='?quality=low';}};
+document.getElementById('b-copy').onclick=function(){var b=this,t=errText,done=function(ok){b.textContent=ok?'Copied!':'Copy failed';};var fb=function(){var ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;left:-999px';document.body.appendChild(ta);ta.select();var ok=false;try{ok=document.execCommand('copy');}catch(e){}ta.remove();done(ok);};try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){done(true);},fb);else fb();}catch(e){fb();}};
+window.addEventListener('error',function(e){if(B.visible)B.fail(e.error||e.message);});
+window.addEventListener('unhandledrejection',function(e){if(B.visible)B.fail(e.reason);});
+})();
+</script>
+<canvas id="c"></canvas>
+<div id="ui"></div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

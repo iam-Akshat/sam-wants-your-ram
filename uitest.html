@@ -1,0 +1,7 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>UI test</title>
+<style>html,body{margin:0;height:100%;overflow:hidden;background:#0b1230}
+#c{position:fixed;inset:0;width:100%;height:100%;background:radial-gradient(circle at 50% 30%,#3a2a8a,#12204f 45%,#070b1f 80%);}
+#c::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(70,200,255,.12) 0 2px,transparent 2px 60px),repeating-linear-gradient(0deg,rgba(255,79,163,.1) 0 2px,transparent 2px 60px)}
+#ui{position:fixed;inset:0}</style></head>
+<body><canvas id="c"></canvas><div id="ui"></div><script type="module" src="/src/dev/uitest.ts"></script></body></html>
