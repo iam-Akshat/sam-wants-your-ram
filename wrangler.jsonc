@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "sam-wants-your-ram",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-20",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // the Worker handles the API and the page itself (to fill in %ORIGIN%); everything else is served straight from assets
+    "run_worker_first": ["/api/*", "/"]
+  },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "sam-wants-your-ram", "database_id": "e5d799b7-234d-4f50-92b5-a9706f3bc247", "migrations_dir": "migrations" }
+  ],
+  // score submissions: at most 1 per 10 s per IP (per Cloudflare location)
+  "ratelimits": [
+    { "name": "SCORE_LIMITER", "namespace_id": "4401", "simple": { "limit": 1, "period": 10 } }
+  ],
+  "routes": [
+    { "pattern": "ram.akshatsethi.com", "custom_domain": true }
+  ],
+  "observability": { "enabled": true }
+}

@@ -6,7 +6,7 @@ export interface Storage {
   top(sinceTs: number, limit: number): Promise<{ nick: string; gb: number; ts: number }[]> | { nick: string; gb: number; ts: number }[];
   rank(sinceTs: number, gb: number): Promise<number> | number;
 }
-export interface Limiter { hit(key: string, now: number): boolean }
+export interface Limiter { hit(key: string, now: number): boolean | Promise<boolean> }
 
 export const MAX_BODY = 2048;
 const BAD = ['fuck', 'shit', 'cunt', 'nigg', 'fagg', 'bitch', 'dick', 'cock', 'pussy', 'whore', 'slut', 'rape', 'nazi', 'hitler', 'retard', 'asshole', 'penis', 'vagina', 'porn', 'kike', 'spic', 'chink'];
@@ -52,7 +52,7 @@ export async function handleApi(req: Request, url: URL, ip: string, d: Deps): Pr
       try { b = JSON.parse(text); } catch { return json({ ok: false, error: 'bad json' }, 400); }
       const gb = Math.round(Number(b.gb)), dur = Number(b.duration);
       if (!plausible(gb, dur)) return json({ ok: false, error: 'implausible' }, 422);
-      if (!d.limiter.hit(ip, now)) return json({ ok: false, error: 'rate limited' }, 429, { 'retry-after': '10' });
+      if (!(await d.limiter.hit(ip, now))) return json({ ok: false, error: 'rate limited' }, 429, { 'retry-after': '10' });
       const nick = cleanNick(b.nickname);
       await d.store.addScore({ nick, gb, dur: Math.round(dur), ts: now });
       const rank = await d.store.rank(dayStart(now), gb);

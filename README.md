@@ -131,3 +131,18 @@ Runs headless Chromium with software WebGL (SwiftShader), screenshots the title,
 ## Tech
 
 Vite + strict TypeScript, three.js 0.170 (ACES filmic tone mapping, PMREM environment, PBR materials, PCF soft shadows, instanced chunked track with pooling, mirrored-geometry floor reflections) and pmndrs `postprocessing` (bloom, SMAA, vignette, tone mapping, a custom speed-line / chromatic-aberration / heat-shimmer pass). Audio is a procedural WebAudio sequencer plus synthesized SFX. Low / Medium / High quality presets are auto-picked and adapt render resolution at runtime.
+
+## Hosting on Cloudflare
+
+Live at **https://ram.akshatsethi.com**, served by a Cloudflare Worker (`worker/index.ts`, config in `wrangler.jsonc`):
+
+* **Static assets:** `dist/` (the single-file game plus `og.png`). The Worker serves `/` itself so it can fill in `%ORIGIN%` in the share-card meta tags.
+* **Score API:** `/api/stats`, `/api/leaderboard` and `/api/score` reuse `server/core.ts` on **D1** (`migrations/`).
+* **Rate limit:** score submits are limited to 1 per 8 s and 40 per hour per client. This uses a salted IP hash kept for 1 hour; the salt is the `IP_SALT` secret.
+
+```bash
+npm run deploy                                                  # build + wrangler deploy
+npx wrangler d1 migrations apply sam-wants-your-ram --remote    # after adding a migration
+```
+
+The Bun server (`server/index.ts`) still works for self-hosting.
